@@ -14,7 +14,7 @@ export const AdminProvider = ({children}) => {
   const [courses, setCourses] = useState([]);
   const [users, setUsers] = useState([]);
   const [enrollments, setEnrollments] = useState([]);
-  
+
   const [dataLoading, setDataLoading] = useState(false);
 
   const logout = useCallback(() => {
@@ -25,7 +25,6 @@ export const AdminProvider = ({children}) => {
     setCourses([]);
     setUsers([]);
     setEnrollments([]);
-   
   }, []);
 
   const fetchAllData = useCallback(async () => {
@@ -38,17 +37,16 @@ export const AdminProvider = ({children}) => {
         headers: {Authorization: `Bearer ${token}`},
       });
 
-      console.log("API response:", JSON.stringify(res.data, null, 2)); //  debug line, remove later
+      console.log("API response:", JSON.stringify(res.data, null, 2));
 
       if (res.data.data) {
         const {courses, users, enrollments} = res.data.data;
         console.log("First enrollment status:", enrollments?.[0]?.status);
-        
+
         //  Always ensure arrays before setting state
         setCourses(Array.isArray(courses) ? courses : []);
         setUsers(Array.isArray(users) ? users : []);
         setEnrollments(Array.isArray(enrollments) ? enrollments : []);
-        
       }
     } catch (err) {
       console.error("Error fetching admin dashboard data:", err);
@@ -88,7 +86,7 @@ export const AdminProvider = ({children}) => {
         users,
         enrollments,
         dataLoading,
-        isReady: !loading && !dataLoading, //  combined ready flag
+        isReady: !loading && !dataLoading,
         refreshAll: fetchAllData,
       }}>
       {children}
