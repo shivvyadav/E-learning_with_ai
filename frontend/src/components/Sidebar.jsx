@@ -7,16 +7,14 @@ const menuItems = [
   {name: "Courses", path: "/courses", icon: BookOpen},
   {name: "Purchases", path: "/purchases", icon: ShoppingCart},
   {name: "Users", path: "/users", icon: Users},
-  
 ];
 
 const Sidebar = ({isOpen, setIsOpen}) => {
   const location = useLocation();
-  const {logout} = useAuth(); // Destructure logout function
+  const {logout} = useAuth();
 
   return (
     <>
-      {/* Overlay for mobile */}
       {isOpen && (
         <div
           className='fixed inset-0 bg-black/40 z-40 lg:hidden'
@@ -24,12 +22,10 @@ const Sidebar = ({isOpen, setIsOpen}) => {
         />
       )}
 
-      {/* Sidebar Container */}
       <div
         className={`fixed top-0 left-0 h-screen w-64 bg-[#3B4CCA] text-white z-50 transform transition-transform duration-300 border-r border-white/10 flex flex-col
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0`}>
-        {/* Header */}
         <div className='flex items-center justify-between px-6 py-5 shrink-0'>
           <h1 className='text-xl font-bold'>E-Learning</h1>
           <button className='lg:hidden' onClick={() => setIsOpen(false)}>
@@ -37,7 +33,6 @@ const Sidebar = ({isOpen, setIsOpen}) => {
           </button>
         </div>
 
-        {/* Navigation Links */}
         <div className='flex flex-col gap-2 mt-4 px-3 overflow-y-auto'>
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -57,7 +52,6 @@ const Sidebar = ({isOpen, setIsOpen}) => {
           })}
         </div>
 
-        {/* Bottom Section (Logout Button) */}
         <div className='mt-auto p-4 border-t border-white/10'>
           <button
             onClick={() => {
