@@ -5,7 +5,6 @@ import {useAuth} from "../context/AdminContext";
 export default function NewUsers() {
   const {users, enrollments, dataLoading} = useAuth();
 
-  //  Always ensure arrays before using array methods
   const safeUsers = Array.isArray(users) ? users : [];
   const safeEnrollments = Array.isArray(enrollments) ? enrollments : [];
 
