@@ -6,7 +6,6 @@ import {useAuth} from "../context/AdminContext";
 export default function LatestReviews() {
   const {reviews, dataLoading} = useAuth();
 
-  // Get the 5 most recent reviews (last in array, reversed)
   const latestReviews = reviews.slice(-5).reverse();
 
   const renderStars = (rating) => {
