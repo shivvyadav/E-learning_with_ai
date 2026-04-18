@@ -5,26 +5,20 @@ import {useAuth} from "../context/AdminContext";
 export default function TopCourses() {
   const {courses, enrollments, dataLoading} = useAuth();
 
-  // Track which images have failed to load
   const [failedImages, setFailedImages] = useState({});
 
-  // 1. Calculate popularity and sort
   const topCourses = courses
     .map((course) => {
-      // Count how many enrollments exist for this specific course
       const studentCount = enrollments.filter(
         (emp) => (emp.course?._id || emp.course) === course._id,
       ).length;
 
       return {...course, studentCount};
     })
-    // 2. Sort by studentCount descending (highest first)
     .sort((a, b) => b.studentCount - a.studentCount)
-    // 3. Take the top 5
     .slice(0, 5);
 
   const handleImageError = (id) => {
-    // If the image fails to load, mark its ID as failed
     setFailedImages((prev) => ({...prev, [id]: true}));
   };
 
@@ -40,7 +34,6 @@ export default function TopCourses() {
 
       <div className='space-y-6'>
         {dataLoading ? (
-          // Skeleton Loader
           [...Array(5)].map((_, i) => (
             <div key={i} className='flex gap-4 items-start animate-pulse'>
               <div className='w-14 h-14 rounded-md bg-neutral-200 shrink-0' />
@@ -53,16 +46,13 @@ export default function TopCourses() {
         ) : topCourses.length > 0 ? (
           topCourses.map((course) => (
             <div key={course._id} className='flex gap-4 items-start'>
-              {/* Course Thumbnail or Placeholder on Error */}
               {failedImages[course._id] || !course.coursethumbnail ? (
-                // Use a generic placeholder
                 <img
                   src='https://via.placeholder.com/150/f4f4f5/52525b?text=Course'
                   alt='placeholder'
                   className='w-14 h-14 rounded-md object-cover border border-neutral-200 shrink-0 bg-neutral-100'
                 />
               ) : (
-                // Try loading the thumbnail
                 <img
                   src={course.coursethumbnail}
                   alt={course.Coursename}
