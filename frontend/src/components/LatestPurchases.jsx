@@ -5,7 +5,6 @@ import {useAuth} from "../context/AdminContext";
 export default function LatestPurchases() {
   const {enrollments, dataLoading} = useAuth();
 
-  // Get the 5 most recent purchases (last in array, reversed)
   const latestPurchases = enrollments.slice(-5).reverse();
 
   return (
@@ -20,7 +19,6 @@ export default function LatestPurchases() {
 
       <div className='space-y-5'>
         {dataLoading ? (
-          // Skeleton Loader
           [...Array(5)].map((_, i) => (
             <div key={i} className='flex justify-between items-start animate-pulse'>
               <div className='flex-1 space-y-2'>
