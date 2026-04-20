@@ -1,0 +1,8 @@
+logs
+node_modules/
+.env
+.npm
+.vscode-test
+.vscode
+uploads/*
+!uploads/.gitkeep
