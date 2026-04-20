@@ -1,24 +1,22 @@
-const mongoose = require("mongoose")
-const Schema = mongoose.Schema
-
-
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const RecommendationSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: "User"
+    ref: "User",
   },
   recommendedCourses: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Course"
-    }
+      ref: "Course",
+    },
   ],
   generatedAt: {
     type: Date,
-    default: Date.now
-  }
-})
+    default: Date.now,
+  },
+});
 
-const airecommend= mongoose.model("airecommend",RecommendationSchema)
-module.exports = airecommend
+const airecommend = mongoose.model("airecommend", RecommendationSchema);
+module.exports = airecommend;
