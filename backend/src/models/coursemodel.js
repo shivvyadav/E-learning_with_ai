@@ -1,66 +1,67 @@
-const mongoose = require("mongoose")
-const Schema = mongoose.Schema
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-const courseSchema = new Schema({
-    Coursename:{
-        type:String,
-        required:[true,"Coursename must be provided"]
+const courseSchema = new Schema(
+  {
+    Coursename: {
+      type: String,
+      required: [true, "Coursename must be provided"],
     },
-    Coursedescription:{
-        type:String,
-        required:[true,"Coursedescription must be provided"]
+    Coursedescription: {
+      type: String,
+      required: [true, "Coursedescription must be provided"],
     },
-    CoursePrice:{
-        type:Number,
-        required:[true,"coursePrice must be provided"]
+    CoursePrice: {
+      type: Number,
+      required: [true, "coursePrice must be provided"],
     },
-    
-    coursethumbnail:{
-        type:String
+
+    coursethumbnail: {
+      type: String,
     },
-    modules:[
-        {
+    modules: [
+      {
         title: String,
-        videos:[
-            {
-                _id: { type: Schema.Types.ObjectId, auto:true },
-                title:String,
-                videoUrl:String,
-                duration:Number
-            }
+        videos: [
+          {
+            _id: {type: Schema.Types.ObjectId, auto: true},
+            title: String,
+            videoUrl: String,
+            duration: Number,
+          },
         ],
-        pdfs:[
-            {
-                _id:{ type:Schema.Types.ObjectId, auto:true },
-                title:String,
-                pdfUrl:String
-            }
-        ]
-        }
+        pdfs: [
+          {
+            _id: {type: Schema.Types.ObjectId, auto: true},
+            title: String,
+            pdfUrl: String,
+          },
+        ],
+      },
     ],
-    category:String,
-    // AI Recommendation attributes
-    tags: [String], // e.g., ["web-development", "javascript", "frontend"]
+    category: String,
+    tags: [String],
     difficulty: {
-        type: String,
-        enum: ["beginner", "intermediate", "advanced"],
-        default: "beginner"
+      type: String,
+      enum: ["beginner", "intermediate", "advanced"],
+      default: "beginner",
     },
-    careerOutcomes: [String], // e.g., ["full-stack-developer", "data-scientist"]
+    careerOutcomes: [String],
     videoFormat: {
-        type: String,
-        enum: ["recorded", "live", "mixed"],
-        default: "recorded"
+      type: String,
+      enum: ["recorded", "live", "mixed"],
+      default: "recorded",
     },
     timeCommitment: {
-        type: String,
-        enum: ["short", "medium", "long"],
-        default: "medium"
+      type: String,
+      enum: ["short", "medium", "long"],
+      default: "medium",
     },
-    
-},{
-    timestamps:true
-})
+  },
+  {
+    timestamps: true,
+  },
+);
 
-const course = mongoose.model("course",courseSchema)
-module.exports = course
+const course = mongoose.model("course", courseSchema);
+module.exports = course;
