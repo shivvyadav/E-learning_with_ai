@@ -1,0 +1,51 @@
+course_id,course_name,domain,intensity,outcome,pedagogy,role,timeframe
+1,Python Basics: Zero to Hero,technical,standard,career,structured,problem_solving,balanced
+2,JavaScript Fundamentals,technical,standard,career,structured,problem_solving,balanced
+3,Java Programming Masterclass,technical,focused,career,structured,problem_solving,long_term
+4,C++ for Beginners,technical,standard,academic,structured,problem_solving,balanced
+5,SQL Mastery: Database Programming,technical,standard,career,hybrid,analyzing,short_term
+6,Web Design Fundamentals,creative,micro,career,exploratory,creating,short_term
+7,Git & GitHub Essentials,technical,micro,career,structured,problem_solving,short_term
+8,UI/UX Design Masterclass,creative,standard,career,hybrid,creating,balanced
+9,Rust Programming,technical,focused,career,structured,problem_solving,long_term
+10,Digital Marketing Complete,business,standard,career,structured,leading,balanced
+11,Data Structures & Algorithms,technical,focused,career,structured,problem_solving,long_term
+12,LeetCode Interview Prep,technical,focused,career,structured,problem_solving,short_term
+13,Startup Founder Bootcamp,business,immersive,entrepreneurship,exploratory,leading,short_term
+14,Dynamic Programming,technical,standard,academic,structured,problem_solving,balanced
+15,Academic Research Writing,academic,standard,academic,structured,analyzing,long_term
+16,Creative Writing Workshop,creative,standard,enrichment,exploratory,creating,balanced
+17,Full Stack Development,technical,immersive,career,structured,creating,long_term
+18,React.js Complete Guide,technical,standard,career,hybrid,creating,balanced
+19,Node.js Backend,technical,standard,career,structured,creating,balanced
+20,Product Management,business,standard,career,hybrid,leading,balanced
+21,Vue.js Essentials,technical,standard,career,structured,creating,short_term
+22,Django Framework,technical,standard,career,structured,creating,balanced
+23,Flutter Mobile App Development,technical,standard,career,hybrid,creating,balanced
+24,React Native Apps,technical,standard,career,hybrid,creating,balanced
+25,Python for Data Science,technical,standard,career,hybrid,analyzing,balanced
+26,Machine Learning A-Z,technical,focused,career,structured,analyzing,long_term
+27,Deep Learning Specialization,technical,focused,career,structured,analyzing,long_term
+28,Data Analysis with Pandas,technical,standard,career,hybrid,analyzing,short_term
+29,SQL for Data Analytics,technical,micro,career,structured,analyzing,short_term
+30,Power BI & Tableau,technical,standard,career,exploratory,analyzing,balanced
+31,Yoga Teacher Training,wellness,focused,career,structured,helping,long_term
+32,Photography Masterclass,creative,standard,monetization,exploratory,creating,balanced
+33,AWS Cloud Architect,technical,focused,career,structured,problem_solving,long_term
+34,Docker & Kubernetes,technical,standard,career,hybrid,problem_solving,balanced
+35,CI/CD Pipelines,technical,standard,career,structured,problem_solving,short_term
+36,Linux Administration,technical,standard,career,structured,problem_solving,balanced
+37,Cybersecurity Basics,technical,standard,career,structured,problem_solving,balanced
+38,Ethical Hacking,technical,focused,career,exploratory,problem_solving,long_term
+39,System Design Interview,technical,focused,career,structured,problem_solving,short_term
+40,Microservices Architecture,technical,focused,career,structured,problem_solving,long_term
+41,Database Design,technical,standard,career,structured,analyzing,balanced
+42,Software Architecture,technical,focused,career,structured,leading,long_term
+43,Social Media Marketing,business,standard,monetization,exploratory,leading,short_term
+44,Graphic Design with Canva,creative,micro,monetization,exploratory,creating,short_term
+45,Business Analytics,business,standard,career,hybrid,analyzing,balanced
+46,Meditation & Mindfulness,wellness,micro,enrichment,exploratory,helping,short_term
+47,Personal Finance Management,business,standard,monetization,structured,analyzing,short_term
+48,Cooking Basics,hands_on,micro,enrichment,exploratory,creating,short_term
+49,Project Management Professional,business,focused,career,structured,leading,long_term
+50,Leadership Skills,business,standard,career,structured,leading,balanced
