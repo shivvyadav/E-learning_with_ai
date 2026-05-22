@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import '../../app/app.dart';
 import '../services/payment_recovery_service.dart';
 
-/// ============================================
-/// App Wrapper - Handles app startup tasks
-/// Keeps main.dart clean and simple
-/// ============================================
 class AppWrapper extends StatefulWidget {
   const AppWrapper({super.key});
 
