@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../config/network_config.dart';
 
-/// Reusable network image widget with fallback for missing images
-/// Automatically corrects image URLs based on device type
+
 class CustomNetworkImage extends StatelessWidget {
   final String? imageUrl;
   final double? height;
@@ -23,15 +22,10 @@ class CustomNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // If imageUrl is null or empty, show fallback immediately
     if (imageUrl == null || imageUrl!.isEmpty) {
       return _buildFallbackWidget();
     }
 
-    // ============================================
-    // Use NetworkConfig to correct the image URL
-    // This ensures images work on both emulator and physical device
-    // ============================================
     final correctedUrl = NetworkConfig.getImageUrl(imageUrl!);
 
     return Image.network(
