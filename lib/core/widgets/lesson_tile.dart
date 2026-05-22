@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class LessonTile extends StatelessWidget {
   final String title;
   final String duration;
-  final VoidCallback? onTap; // Add this parameter
+  final VoidCallback? onTap; 
 
   const LessonTile({
     super.key,
     required this.title,
     required this.duration,
-    this.onTap, // Accept it in constructor
+    this.onTap, 
   });
 
   @override
@@ -19,7 +19,7 @@ class LessonTile extends StatelessWidget {
       title: Text(title),
       subtitle: Text(duration),
       trailing: const Icon(Icons.chevron_right),
-      onTap: onTap ?? () { // Use external onTap if provided, otherwise default
+      onTap: onTap ?? () {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Lesson \"$title\" clicked"),
