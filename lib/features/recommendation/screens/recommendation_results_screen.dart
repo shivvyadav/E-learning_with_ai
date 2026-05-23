@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/loading_widget.dart';
-import '../../../core/widgets/custom_network_image.dart'; // ADDED: For image fallback
+import '../../../core/widgets/custom_network_image.dart'; 
 import '../providers/recommendation_provider.dart';
 import '../models/recommended_course.dart';
 import '../../courses/providers/course_provider.dart';
@@ -57,7 +57,6 @@ class RecommendationResultsScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              // Clear recommendations and go back to start
               recommendation.clearRecommendations();
               Navigator.pushNamedAndRemoveUntil(
                 context,
@@ -91,7 +90,6 @@ class RecommendationResultsScreen extends StatelessWidget {
     final isEnrolled = courseProvider.enrolledCourses
         .any((c) => c.id == recCourse.id);
 
-    // Map RecommendedCourse -> CourseModel for CourseDetailScreen
     final course = CourseModel(
       id: recCourse.id,
       title: recCourse.title,
@@ -102,7 +100,6 @@ class RecommendationResultsScreen extends StatelessWidget {
       isEnrolled: isEnrolled,
     );
 
-    // Medal emoji based on rank
     String medal = '';
     Color medalColor = Colors.amber;
     if (rank == 1) {
@@ -135,8 +132,6 @@ class RecommendationResultsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image section
-            // CHANGED: Replaced Image.network with CustomNetworkImage for image fallback
             ClipRRect(
               borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
               child: CustomNetworkImage(
@@ -153,7 +148,6 @@ class RecommendationResultsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Rank and Match Score
                   Row(
                     children: [
                       Text(
@@ -180,7 +174,7 @@ class RecommendationResultsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   
-                  // Title
+              
                   Text(
                     recCourse.title,
                     style: const TextStyle(
@@ -190,7 +184,7 @@ class RecommendationResultsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   
-                  // Description
+               
                   Text(
                     recCourse.description,
                     maxLines: 2,
@@ -199,7 +193,7 @@ class RecommendationResultsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   
-                  // Price tag
+                 
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
@@ -217,7 +211,7 @@ class RecommendationResultsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   
-                  // Button
+           
                   SizedBox(
                     width: double.infinity,
                     child: CustomButton(
