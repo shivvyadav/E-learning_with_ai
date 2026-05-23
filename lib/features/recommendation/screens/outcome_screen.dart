@@ -19,7 +19,7 @@ class OutcomeScreen extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(  // ADDED: Makes the screen scrollable
+        child: SingleChildScrollView(  
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
