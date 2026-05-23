@@ -70,17 +70,14 @@ class TimeframeScreen extends StatelessWidget {
               
               const SizedBox(height: 30),
               
-              // Get Recommendations button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: questionnaireProvider.timeframe.isNotEmpty
                       ? () async {
-                          // Build user preferences
                           final preferences = questionnaireProvider.buildPreferences();
                           
-                          // Show loading indicator
-                          showDialog(
+                                                    showDialog(
                             context: context,
                             barrierDismissible: false,
                             builder: (context) => const Center(
@@ -88,20 +85,15 @@ class TimeframeScreen extends StatelessWidget {
                             ),
                           );
                           
-                          // Get recommendations
                           final success = await recommendationProvider.getRecommendations(preferences);
                           
-                          // Close loading dialog
-                          // Use if (context.mounted) check with BuildContext
                           if (context.mounted) {
                             Navigator.pop(context);
                           }
                           
                           if (success && context.mounted) {
-                            // Navigate to results screen
                             Navigator.pushNamed(context, '/recommendation-results');
                           } else if (context.mounted) {
-                            // Show error message
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(recommendationProvider.error ?? "Failed to get recommendations"),
