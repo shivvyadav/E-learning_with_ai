@@ -15,7 +15,7 @@ class DomainScreen extends StatelessWidget {
         backgroundColor: Colors.blue,
       ),
       body: SafeArea(
-        child: SingleChildScrollView(  // ADDED: Makes the screen scrollable
+        child: SingleChildScrollView(  
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +31,6 @@ class DomainScreen extends StatelessWidget {
               ),
               const SizedBox(height: 40),
               
-              // Domain options (keeping emojis)
               _buildOptionCard(
                 context: context,
                 emoji: "💻",
@@ -121,7 +120,7 @@ class DomainScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 20), // Extra bottom padding
+              const SizedBox(height: 20),
             ],
           ),
         ),
