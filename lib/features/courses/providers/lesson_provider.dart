@@ -14,10 +14,7 @@ class LessonProvider extends ChangeNotifier {
 
   List<LessonModel> get lessons => _lessons;
 
-  /// Returns the duration of a lesson if known.
   Duration? getLessonDuration(String lessonId) => _lessonDurations[lessonId];
-
-  /// Sets a duration for a lesson and persists it for faster display later.
   Future<void> setLessonDuration(String lessonId, Duration duration) async {
     if (duration == Duration.zero) return;
 
@@ -41,7 +38,6 @@ class LessonProvider extends ChangeNotifier {
       }
     }
 
-    // Notify early so the UI can show cached durations immediately.
     notifyListeners();
   }
 
@@ -51,8 +47,6 @@ class LessonProvider extends ChangeNotifier {
 
     await _loadCachedDurations();
 
-    // Load durations asynchronously (best-effort). This is useful for showing
-    // the video length on the lesson list. We do this in parallel for speed.
     final futures = <Future<void>>[];
 
     for (final lesson in _lessons) {
@@ -78,7 +72,6 @@ class LessonProvider extends ChangeNotifier {
       await setLessonDuration(lesson.id, duration);
       controller.dispose();
     } catch (_) {
-      // Ignore failures (e.g., network issues or invalid URL).
     }
   }
 
