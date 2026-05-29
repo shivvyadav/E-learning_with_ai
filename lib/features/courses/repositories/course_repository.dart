@@ -3,10 +3,6 @@ import '../../../core/services/api_service.dart';
 import '../models/course_model.dart';
 import '../models/lesson_model.dart';
 
-
-// Here courses loaded from backend APIs
-// Manage enrollment through backend APIs
-// Provide lesson data by querying course details
 class CourseRepository {
   final ApiService _apiService = ApiService();
 
@@ -39,7 +35,6 @@ class CourseRepository {
   }
 
   String _normalizeCourseId(String courseId) {
-    // Accept either plain ObjectId or strings that contain it (e.g. from debug output).
     final match = RegExp(r"[0-9a-fA-F]{24}").firstMatch(courseId);
     return match?.group(0) ?? courseId;
   }
@@ -49,14 +44,12 @@ class CourseRepository {
       final normalizedId = _normalizeCourseId(courseId);
       final response =
           await _apiService.get(ApiEndpoints.courseLessons(normalizedId));
-
       final data = response["data"] as List<dynamic>? ?? [];
       return data.map((raw) {
         final map = raw as Map<String, dynamic>;
         return LessonModel.fromMap(map);
       }).toList();
     } catch (e) {
-      // Fallback to older course-detail endpoint if /lessons is not available.
       try {
         final response =
             await _apiService.get(ApiEndpoints.courseDetail(courseId));
