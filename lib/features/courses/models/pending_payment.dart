@@ -1,5 +1,3 @@
-/// Model to store pending payment information
-/// This helps recover payments if app is closed during payment
 class PendingPayment {
   final String courseSelectId;  // ID of the course selection
   final String courseId;        // Course ID
@@ -21,7 +19,6 @@ class PendingPayment {
     required this.status,
   });
 
-  // Convert to JSON for storing in SharedPreferences
   Map<String, dynamic> toJson() => {
     'courseSelectId': courseSelectId,
     'courseId': courseId,
@@ -33,7 +30,7 @@ class PendingPayment {
     'status': status,
   };
 
-  // Create from JSON
+
   factory PendingPayment.fromJson(Map<String, dynamic> json) => PendingPayment(
     courseSelectId: json['courseSelectId'],
     courseId: json['courseId'],
