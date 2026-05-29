@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/course_model.dart';
 import '../repositories/course_repository.dart';
-
 class CourseProvider extends ChangeNotifier {
   final CourseRepository _repository = CourseRepository();
 
@@ -16,10 +15,8 @@ class CourseProvider extends ChangeNotifier {
 
   final Map<String, int> _lessonCountCache = {};
 
-  //LOAD COURSES + ENROLLMENT
-
   Future<void> loadCourses() async {
-    if (_initialized) return; // avoids reloading to reduce api calls for unnecessary work
+    if (_initialized) return;
 
     final courses = await _repository.getCourses();
     final enrolledIds = await _repository.getEnrolledCourseIds();
@@ -36,7 +33,6 @@ class CourseProvider extends ChangeNotifier {
       );
     }).toList();
 
-    // Prefetch lesson counts only for enrolled courses to reduce API calls
     await Future.wait(
       enrolledIds.map((id) => getLessonCountAsync(id)),
     );
@@ -44,9 +40,6 @@ class CourseProvider extends ChangeNotifier {
     _initialized = true;
     notifyListeners();
   }
-
-
-  //ENROLL COURSE
 
   Future<void> enrollCourse(String courseId) async {
     await _repository.enrollCourse(courseId);
@@ -57,9 +50,6 @@ class CourseProvider extends ChangeNotifier {
     _courses[index].isEnrolled = true;
     notifyListeners();
   }
-
- 
-  // LESSON COUNT (USED BY PROGRESS)
 
   Future<int> getLessonCountAsync(String courseId) async {
     if (_lessonCountCache.containsKey(courseId)) { // use cached data
@@ -72,7 +62,6 @@ class CourseProvider extends ChangeNotifier {
       notifyListeners();
       return count;
     } catch (_) {
-      // If the backend call fails, default to 0.
       _lessonCountCache[courseId] = 0;
       notifyListeners();
       return 0;
@@ -83,9 +72,6 @@ class CourseProvider extends ChangeNotifier {
     return _lessonCountCache[courseId] ?? 0;
   }
 
-
-  // GET COURSE BY ID 
-
   CourseModel? getCourseById(String id) {
     try {
       return _courses.firstWhere((c) => c.id == id);
@@ -93,9 +79,6 @@ class CourseProvider extends ChangeNotifier {
       return null;
     }
   }
-
-
-  // NEW: Clear all course data (called on logout)
 
   void clearAllData() {
     _courses = [];
@@ -106,7 +89,6 @@ class CourseProvider extends ChangeNotifier {
     notifyListeners();    
   }
 
-    // Force refresh courses (ignore cache and reload from server)
   Future<void> refreshCourses() async {
     _initialized = false;  // Reset cache flag
     _lessonCountCache.clear();  // Clear cached lesson counts
