@@ -15,9 +15,6 @@ class LessonModel {
 
   factory LessonModel.fromMap(Map<String, dynamic> map) {
     final rawVideoUrl = (map['videoUrl'] ?? '').toString();
-    
-    // Use NetworkConfig to correct video URL
-    // This ensures localhost is replaced with computer IP
 
     final correctedVideoUrl = NetworkConfig.getVideoUrl(rawVideoUrl);
 
