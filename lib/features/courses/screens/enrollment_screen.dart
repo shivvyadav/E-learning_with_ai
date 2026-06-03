@@ -4,7 +4,7 @@ import '../models/course_model.dart';
 import '../providers/course_provider.dart';
 import 'mock_payment_screen.dart';
 import 'khalti_payment_screen.dart';
-import 'my_courses_screen.dart'; // ADD THIS IMPORT
+import 'my_courses_screen.dart';
 
 class EnrollmentScreen extends StatefulWidget {
   final CourseModel course;
@@ -24,9 +24,6 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
       await context.read<CourseProvider>().enrollCourse(widget.course.id);
 
       if (!mounted) return;
-
-      // CHANGED: Navigate to My Courses instead of popping to first screen
-
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -37,7 +34,6 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                // Navigate to My Courses screen and clear all previous routes
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
@@ -70,9 +66,6 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
             : Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                
-                  // Mock enrollment (existing demo flow)
-                
                   if (widget.course.isFree)
                     ElevatedButton(
                       onPressed: _handleFreeEnrollment,
