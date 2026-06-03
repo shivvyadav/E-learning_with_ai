@@ -41,15 +41,12 @@ class _CourseContentScreenState extends State<CourseContentScreen> {
 
     return '$minutes:${seconds.toString().padLeft(2, '0')}';
   }
-
   @override
   Widget build(BuildContext context) {
     final lessonProvider = Provider.of<LessonProvider>(context);
     final progressProvider = Provider.of<ProgressProvider>(context);
     final lessons = lessonProvider.lessons;
     final totalLessons = lessons.length;
-
-    // Calculate overall progress
     int completedCount = 0;
     for (final lesson in lessons) {
       if (progressProvider.isLessonCompleted(widget.course.id, lesson.id)) {
@@ -72,7 +69,6 @@ class _CourseContentScreenState extends State<CourseContentScreen> {
             padding: const EdgeInsets.all(12),
             child: Column(
               children: [
-                // Course Progress Bar
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -164,9 +160,6 @@ class _CourseContentScreenState extends State<CourseContentScreen> {
     );
   }
 
-  
-  // Lesson Card with clear boundaries and better UI
-
   Widget _buildLessonCard({
     required LessonModel lesson,
     required int index,
@@ -203,7 +196,6 @@ class _CourseContentScreenState extends State<CourseContentScreen> {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              // Lesson Number / Status Icon
               Container(
                 width: 44,
                 height: 44,
@@ -231,9 +223,7 @@ class _CourseContentScreenState extends State<CourseContentScreen> {
                 ),
               ),
               const SizedBox(width: 12),
-              
-              // Lesson Details (with long title handling)
-              Expanded(
+                            Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -298,9 +288,7 @@ class _CourseContentScreenState extends State<CourseContentScreen> {
                   ],
                 ),
               ),
-              
-              // Play Button
-              Container(
+                            Container(
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
@@ -321,8 +309,6 @@ class _CourseContentScreenState extends State<CourseContentScreen> {
       ),
     );
   }
-
-  // Helper: Format resume time (MM:SS)
   String _formatResumeTime(int seconds) {
     final minutes = seconds ~/ 60;
     final remainingSeconds = seconds % 60;
