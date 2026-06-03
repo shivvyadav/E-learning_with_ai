@@ -17,8 +17,6 @@ class _CourseListScreenState extends State<CourseListScreen> {
   late Future _loadFuture;
   String _searchQuery = "";
   bool _isRefreshing = false;
-
-  // NEW: flag to refresh only once
   bool _hasRefreshed = false;
 
   @override
@@ -41,10 +39,6 @@ class _CourseListScreenState extends State<CourseListScreen> {
   Future<void> _loadCourses() async {
     await Provider.of<CourseProvider>(context, listen: false).loadCourses();
   }
-
- 
-  // Pull to refresh functionality
-
   Future<void> _onRefresh() async {
     if (_isRefreshing) return;
 
@@ -111,8 +105,6 @@ class _CourseListScreenState extends State<CourseListScreen> {
                   ),
 
                   const SizedBox(height: 20),
-
-                  /// EMPTY STATE
                   if (filteredCourses.isEmpty)
                     Expanded(
                       child: Center(
@@ -135,7 +127,6 @@ class _CourseListScreenState extends State<CourseListScreen> {
                       ),
                     )
                   else
-                    /// GRID VIEW
                     Expanded(
                       child: GridView.builder(
                         physics: const AlwaysScrollableScrollPhysics(),
