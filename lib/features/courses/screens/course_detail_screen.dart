@@ -10,9 +10,7 @@ import 'course_content_screen.dart';
 
 class CourseDetailScreen extends StatefulWidget {
   final CourseModel course;
-
   const CourseDetailScreen({super.key, required this.course});
-
   @override
   State<CourseDetailScreen> createState() => _CourseDetailScreenState();
 }
@@ -26,13 +24,10 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   @override
   void initState() {
     super.initState();
-    // Load preview lessons in background (only if not enrolled)
     if (!widget.course.isEnrolled) {
       _loadPreviewLessons();
     }
   }
-
-  // Load actual course lessons for preview (without marking as enrolled)
   Future<void> _loadPreviewLessons() async {
     if (_hasLoadedPreview) return;
     
@@ -42,7 +37,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
 
     try {
       final lessonProvider = Provider.of<LessonProvider>(context, listen: false);
-      // Load lessons without marking as enrolled
       await lessonProvider.loadLessons(widget.course.id);
       
       setState(() {
@@ -75,9 +69,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-           
-            // Course Thumbnail (Header Image)
-          
+
             Container(
               height: 220,
               width: double.infinity,
@@ -122,16 +114,11 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                       ),
                     ),
             ),
-            
-           
-            // Course Content Section
-       
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Course Title
                   Text(
                     widget.course.title,
                     style: const TextStyle(
@@ -140,9 +127,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  
-                  // Course Meta Info (Price, Status)
-                  Row(
+                                    Row(
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -177,7 +162,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                           ),
                         ),
                       const Spacer(),
-                      // Enrollment Status Badge
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 12,
@@ -212,37 +196,12 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  
-                  // Course Description
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade50,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.grey.shade200,
-                      ),
-                    ),
-                    child: Text(
-                      widget.course.description,
-                      style: TextStyle(
-                        fontSize: 14,
-                        height: 1.5,
-                        color: Colors.grey.shade800,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  
-                 
-                  // Main Action Button (Enroll / Continue Learning)
-                
+      
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
                         if (isEnrolled) {
-                          // Navigate to course content
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -252,7 +211,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                             ),
                           );
                         } else {
-                          // Navigate to enrollment screen
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -281,19 +239,70 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   ),
                   
                   const SizedBox(height: 16),
+          
+                  if (!isEnrolled) ...[
+                        color: Colors.grey.shade200,
+                      ),
+                    ),
+                    child: Text(
+                      widget.course.description,
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.5,
+                        color: Colors.grey.shade800,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (isEnrolled) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => CourseContentScreen(
+                                course: widget.course,
+                              ),
+                            ),
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => EnrollmentScreen(
+                                course: widget.course,
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        backgroundColor: isEnrolled ? Colors.green : Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        isEnrolled ? "Continue Learning" : "Enroll Now",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                   
-               
-                  // Preview Course Content (Only if NOT enrolled)
+                  const SizedBox(height: 16),
                 
                   if (!isEnrolled) ...[
                     const Divider(height: 32),
-                    
-                    // Expandable Preview Section Header
-                    InkWell(
+                                        InkWell(
                       onTap: () {
                         setState(() {
                           _isPreviewExpanded = !_isPreviewExpanded;
-                          // Load lessons if not loaded yet
                           if (!_hasLoadedPreview && _isPreviewExpanded) {
                             _loadPreviewLessons();
                           }
@@ -333,7 +342,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                       ),
                     ),
                     
-                    // Expandable Content (Real Lessons Preview)
                     if (_isPreviewExpanded)
                       Container(
                         margin: const EdgeInsets.only(top: 8),
@@ -346,7 +354,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                         ),
                         child: Column(
                           children: [
-                            // Info Banner
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
@@ -377,7 +384,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                               ),
                             ),
                             
-                            // Lessons List (Preview - Not Clickable)
                             if (_isLoadingPreview)
                               const Padding(
                                 padding: EdgeInsets.all(32),
@@ -493,10 +499,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   ],
                   
                   const SizedBox(height: 24),
-                  
-                 
-                  // Course Features Section
-                 
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -538,9 +540,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
       ),
     );
   }
-  
-  // Helper widget for feature items
-  Widget _buildFeatureItem({
+    Widget _buildFeatureItem({
     required IconData icon,
     required String text,
   }) {
