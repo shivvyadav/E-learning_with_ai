@@ -7,7 +7,6 @@ import '../../../state/progress_provider.dart';
 import 'course_content_screen.dart';
 import '../../../app/routes.dart';
 
-// Changed from StatelessWidget → StatefulWidget
 class MyCoursesScreen extends StatefulWidget {
   const MyCoursesScreen({super.key});
 
@@ -16,7 +15,7 @@ class MyCoursesScreen extends StatefulWidget {
 }
 
 class _MyCoursesScreenState extends State<MyCoursesScreen> {
-  bool _hasRefreshed = false; // Ensure refresh happens only once
+  bool _hasRefreshed = false; 
 
   @override
   void didChangeDependencies() {
@@ -28,9 +27,6 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
       });
     }
   }
-
-
-  // Pull to refresh functionality
 
   Future<void> _onRefresh(BuildContext context) async {
     final courseProvider = Provider.of<CourseProvider>(context, listen: false);
@@ -49,7 +45,6 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
 
     final enrolledCourses = courseProvider.enrolledCourses;
 
-    /// EMPTY STATE
     if (enrolledCourses.isEmpty) {
       return Scaffold(
         appBar: AppBar(title: const Text("My Learning")),
@@ -86,7 +81,6 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
       );
     }
 
-    /// SPLIT COURSES
     final activeCourses = enrolledCourses.where((c) {
       final total = courseProvider.getLessonCount(c.id);
       final progress = progressProvider.getCourseProgress(c.id, total);
@@ -99,7 +93,6 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
       return progress == 1;
     }).toList();
 
-    /// OVERALL PROGRESS %
     final totalLessons = enrolledCourses.fold<int>(
       0,
       (sum, course) => sum + courseProvider.getLessonCount(course.id),
@@ -124,7 +117,6 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// SUMMARY SECTION
               Row(
                 children: [
                   _statCard("Active", activeCourses.length.toString()),
@@ -137,7 +129,6 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
 
               const SizedBox(height: 24),
 
-              /// ACTIVE COURSES
               if (activeCourses.isNotEmpty) ...[
                 const Text(
                   "Continue Learning",
@@ -157,7 +148,6 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                       padding: const EdgeInsets.all(12),
                       child: Row(
                         children: [
-                          /// THUMBNAIL
                           ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: CustomNetworkImage(
@@ -171,7 +161,6 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                           ),
                           const SizedBox(width: 12),
 
-                          /// CONTENT
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,7 +203,6 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                 }),
               ],
 
-              /// COMPLETED COURSES
               if (completedCourses.isNotEmpty) ...[
                 const SizedBox(height: 12),
                 const Text(
