@@ -45,10 +45,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     super.initState();
     _initializeVideo();
   }
-
-
-  // Clean filename to avoid special characters issues
-
   String _cleanFileName(String fileName) {
     // Remove special characters that might cause issues
     String cleaned = fileName
@@ -66,11 +62,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         .replaceAll('\\', '_')
         .replaceAll('/', '_');
     
-    // Limit filename length
     if (cleaned.length > 100) {
       cleaned = cleaned.substring(0, 100);
-    }
-    
+    } 
     return cleaned;
   }
 
@@ -81,7 +75,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         _error = null;
       });
 
-      // First, correct the video URL using NetworkConfig
       _correctedVideoUrl = NetworkConfig.getVideoUrl(widget.videoUrl);
       print("Original URL: ${widget.videoUrl}");
       print("Corrected URL: $_correctedVideoUrl");
@@ -99,7 +92,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         _showResumeButton = true;
       }
 
-      // Check if video is already cached with cleaned filename
       final cleanedFileName = _cleanFileName(_getFileNameFromUrl(_correctedVideoUrl!));
       final directory = await getTemporaryDirectory();
       final cachedFile = File('${directory.path}/$cleanedFileName');
@@ -107,7 +99,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       if (await cachedFile.exists()) {
         final fileSize = await cachedFile.length();
         if (fileSize > 0) {
-          // Use cached file for smooth playback
           _videoController = VideoPlayerController.file(
             cachedFile,
             videoPlayerOptions: VideoPlayerOptions(
@@ -117,7 +108,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           _isCached = true;
           print("Playing from cache: ${cachedFile.path}");
         } else {
-          // File exists but is empty, delete it
           await cachedFile.delete();
           _videoController = VideoPlayerController.networkUrl(
             Uri.parse(_correctedVideoUrl!),
@@ -128,7 +118,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           print("Playing from network (cache was empty): $_correctedVideoUrl");
         }
       } else {
-        // Start playing from network using corrected URL
         _videoController = VideoPlayerController.networkUrl(
           Uri.parse(_correctedVideoUrl!),
           videoPlayerOptions: VideoPlayerOptions(
@@ -137,11 +126,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         );
         print("Playing from network: $_correctedVideoUrl");
         
-        // Start background download for future playback
         _downloadInBackground(_correctedVideoUrl!);
       }
 
-      // Initialize the controller with timeout
       await _videoController!.initialize().timeout(
         const Duration(seconds: 30),
         onTimeout: () {
@@ -157,7 +144,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         _videoController!.value.duration,
       );
 
-      // Setup Chewie with optimized settings
       _chewieController = ChewieController(
         videoPlayerController: _videoController!,
         autoPlay: !_showResumeButton,
@@ -169,7 +155,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         showControlsOnInitialize: false,
         autoInitialize: true,
         
-        // Custom progress colors
         materialProgressColors: ChewieProgressColors(
           playedColor: Colors.blue,
           handleColor: Colors.blue,
@@ -177,7 +162,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           backgroundColor: Colors.black26,
         ),
         
-        // Playback speed options
         playbackSpeeds: const [
           0.5,
           0.75,
@@ -187,7 +171,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           2.0,
         ],
         
-        // Custom buffering indicator
         bufferingBuilder: (context) {
           return const Center(
             child: Column(
@@ -204,7 +187,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           );
         },
         
-        // Custom placeholder while loading
         placeholder: Container(
           color: Colors.black,
           child: const Center(
@@ -222,7 +204,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           ),
         ),
         
-        // Error builder
         errorBuilder: (context, errorMessage) {
           return Center(
             child: Column(
@@ -250,14 +231,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         },
       );
 
-      // Add position listener
       _videoController!.addListener(() {
         if (!_videoController!.value.isInitialized) return;
 
         final position = _videoController!.value.position;
         final seconds = position.inSeconds;
 
-        // Save position every 5 seconds
         if ((seconds - _lastSavedSeconds).abs() >= 5) {
           _lastSavedSeconds = seconds;
           progressProvider.savePosition(
@@ -267,7 +246,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           );
         }
 
-        // Mark lesson complete
         if (!_completedRecorded &&
             _videoController!.value.duration.inSeconds > 0 &&
             seconds >= _videoController!.value.duration.inSeconds - 1) {
@@ -291,9 +269,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     }
   }
 
-
-  // Get cached video file
-
   Future<File?> _getCachedVideo(String url) async {
     try {
       final directory = await getTemporaryDirectory();
@@ -313,9 +288,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     }
   }
 
-
-  // Download video in background for caching
-
   Future<void> _downloadInBackground(String url) async {
     try {
       final directory = await getTemporaryDirectory();
@@ -323,7 +295,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       final cleanedFileName = _cleanFileName(fileName);
       final file = File('${directory.path}/$cleanedFileName');
       
-      // Check if already downloaded
       if (await file.exists()) {
         final fileSize = await file.length();
         if (fileSize > 0) return;
@@ -352,9 +323,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     }
   }
 
-
-  // Extract filename from URL
-
   String _getFileNameFromUrl(String url) {
     try {
       final uri = Uri.parse(url);
@@ -372,9 +340,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     }
   }
 
-  // ============================================
-  // Resume video from saved position
-  // ============================================
   void _resumeVideo() {
     if (_videoController != null) {
       _videoController!.seekTo(Duration(seconds: _resumePosition));
@@ -385,9 +350,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     }
   }
 
-  // ============================================
-  // Start from beginning
-  // ============================================
   void _startOver() {
     if (_videoController != null) {
       _videoController!.seekTo(Duration.zero);
@@ -471,7 +433,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 )
               : Column(
                   children: [
-                    // Video Player
                     Expanded(
                       child: Center(
                         child: AspectRatio(
@@ -483,7 +444,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                       ),
                     ),
                     
-                    // Cache status indicator
                     if (_isCached)
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -499,17 +459,13 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                           children: [
                             Icon(Icons.check_circle, size: 16, color: Colors.green),
                             SizedBox(width: 4),
-                            // Text(
-                            //   "Cached - Smooth Playback",
-                            //   style: TextStyle(fontSize: 12, color: Colors.green),
-                            // ),
+                            
                           ],
                         ),
                       ),
                     
                     const SizedBox(height: 10),
                     
-                    // Resume / Start Over buttons
                     if (_showResumeButton)
                       Container(
                         padding: const EdgeInsets.all(16),
