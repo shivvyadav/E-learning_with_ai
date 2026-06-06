@@ -24,17 +24,12 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
   final _phoneController = TextEditingController();
   final _service = KhaltiPaymentService();
 
-  // loading state for starting payment (separate from verify)
   bool _isStarting = false;
-  // loading state while verifying a completed payment
   bool _isVerifying = false;
-  // store the URL returned by backend to open in browser
   String? _paymentUrl;
   String? _courseSelectId;
-  // payment identifier used for verification
   String? _pidx;
   
-  // Timer for verification timeout
   Timer? _verificationTimer;
   int _verificationAttempts = 0;
   static const int maxVerificationAttempts = 10; // 20 seconds max (2 sec * 10)
@@ -53,10 +48,6 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
     _phoneController.dispose();
     super.dispose();
   }
-
-
-  // Show error dialog with proper message
-
   void _showErrorDialog(String message, {bool popScreen = true}) {
     if (!mounted) return;
     showDialog(
@@ -68,9 +59,9 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context); // Close dialog
+              Navigator.pop(context);
               if (popScreen) {
-                Navigator.pop(context); // Close payment screen
+                Navigator.pop(context);
               }
             },
             child: const Text('OK'),
@@ -79,10 +70,6 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
       ),
     );
   }
-
-
-  // Show success dialog and enroll
-
   void _showSuccessAndEnroll() async {
     if (!mounted) return;
     
@@ -95,8 +82,8 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context); // Close dialog
-              Navigator.pop(context, true); // Close payment screen with success
+              Navigator.pop(context);
+              Navigator.pop(context, true);
             },
             child: const Text('Go to My Courses'),
           ),
@@ -104,9 +91,6 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
       ),
     );
   }
-
-
-  // Start payment process
 
   Future<void> _startPayment() async {
     final phone = _phoneController.text.trim();
@@ -127,7 +111,6 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
     });
 
     try {
-      // 1) Create a course selection (required by backend payment flow).
       final selection = await _service.createCourseSelection(
         courseId: widget.course.id,
         amount: widget.course.price,
@@ -140,8 +123,6 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
       }
       setState(() => _courseSelectId = courseSelectId);
       
-      // Save pending payment to local storage
-      // This helps recover if app is closed
       final pendingPayment = PendingPayment(
         courseSelectId: courseSelectId,
         courseId: widget.course.id,
@@ -154,7 +135,6 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
       );
       await PendingPaymentService.savePendingPayment(pendingPayment);
 
-      // 2) Initiate payment via backend. Backend returns the Khalti redirect URL.
       final paymentUrl = await _service.initiatePayment(
         courseSelectId: courseSelectId,
         amount: widget.course.price,
@@ -167,10 +147,8 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
       if (!mounted) return;
       setState(() => _paymentUrl = paymentUrl);
 
-      // Try to open the payment URL automatically.
       await _launchPaymentUrl(paymentUrl);
 
-      // Attempt to retrieve the payment identifier (pidx) for later verification.
       if (!mounted) return;
       await _refreshPidx(courseSelectId);
     } catch (error) {
@@ -180,8 +158,6 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
       if (mounted) setState(() => _isStarting = false);
     }
   }
-
-  // Refresh pidx from backend
 
   Future<void> _refreshPidx(String courseSelectId) async {
     try {
@@ -197,7 +173,6 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
       if (!mounted) return;
       setState(() => _pidx = newPidx);
       
-      // Update pending payment with pidx
       if (newPidx != null) {
         await PendingPaymentService.updatePidx(courseSelectId, newPidx);
       }
@@ -205,9 +180,6 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
       debugPrint('Could not refresh pidx: $error');
     }
   }
-
-
-  // Verify payment with timeout and retry
 
   Future<void> _verifyPayment() async {
     if (_pidx == null) {
@@ -218,20 +190,16 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
     if (!mounted) return;
     setState(() => _isVerifying = true);
     
-    // Cancel any existing timer
     _verificationTimer?.cancel();
     
-    // Start verification with retry logic
     _verificationAttempts = 0;
     _startVerificationLoop();
   }
   
   void _startVerificationLoop() {
     if (_verificationAttempts >= maxVerificationAttempts) {
-      // Timeout reached - assume payment failed or user cancelled
       setState(() => _isVerifying = false);
       
-      // Remove pending payment after timeout
       if (_courseSelectId != null) {
         PendingPaymentService.removePendingPayment(_courseSelectId!);
       }
@@ -247,36 +215,29 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
     _verificationAttempts++;
     _verifyOnce();
     
-    // Schedule next check if not completed
     if (!_isPaymentCompleted && _verificationAttempts < maxVerificationAttempts) {
       _verificationTimer = Timer(const Duration(seconds: 2), _startVerificationLoop);
     }
   }
   
-
-  // Single verification attempt
   Future<void> _verifyOnce() async {
     if (_isPaymentCompleted) return;
     
     try {
-      // Use the new method that returns detailed status
       final result = await _service.verifyPaymentWithStatus(pidx: _pidx!);
       if (!mounted) return;
       
       print("🔍 Verification result: $result");
       
       if (result['success'] == true && result['status'] == 'completed') {
-        // Payment completed successfully
         _isPaymentCompleted = true;
         _verificationTimer?.cancel();
         setState(() => _isVerifying = false);
         
-        // Enroll the user after successful payment
         try {
           final courseProvider = Provider.of<CourseProvider>(context, listen: false);
           await courseProvider.enrollCourse(widget.course.id);
           
-          // Remove pending payment
           if (_courseSelectId != null) {
             await PendingPaymentService.removePendingPayment(_courseSelectId!);
           }
@@ -286,14 +247,11 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
           _showErrorDialog('Payment verified but enrollment failed: $enrollError');
         }
       } else if (result['status'] == 'pending') {
-        // Payment still pending, continue retrying
         debugPrint('⏳ Payment still pending, retrying...');
       } else if (result['status'] == 'failed' || result['status'] == 'not_found') {
-        // Payment failed or was cancelled
         _verificationTimer?.cancel();
         setState(() => _isVerifying = false);
         
-        // Remove pending payment since it failed
         if (_courseSelectId != null) {
           await PendingPaymentService.removePendingPayment(_courseSelectId!);
         }
@@ -303,26 +261,19 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
           popScreen: true,
         );
       } else {
-        // Unknown status, continue retrying
         debugPrint('⚠️ Unknown verification status: ${result['status']}');
       }
     } catch (e) {
       debugPrint('Verification attempt $_verificationAttempts failed: $e');
-      // Don't show error on each attempt, just continue retrying
     }
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // Auto verify payment when user returns from Khalti browser
-    // Only start verification if not already verifying
     if (state == AppLifecycleState.resumed && !_isVerifying && !_isPaymentCompleted && _pidx != null) {
       _verifyPayment();
     }
   }
-
-
-  // Launch Khalti payment page in external browser
 
   Future<void> _launchPaymentUrl(String url) async {
     final uri = Uri.tryParse(url);
@@ -371,7 +322,6 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
             ),
             const SizedBox(height: 16),
 
-            // Start Payment Button
             ElevatedButton(
               onPressed: (_isStarting || _isVerifying) ? null : _startPayment,
               style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
@@ -399,7 +349,6 @@ class _KhaltiPaymentScreenState extends State<KhaltiPaymentScreen> with WidgetsB
               ),
               const SizedBox(height: 12),
               
-              // Show verification status
               if (_pidx != null) ...[
                 Text('Payment ID: $_pidx', style: const TextStyle(fontSize: 12)),
                 const SizedBox(height: 8),
