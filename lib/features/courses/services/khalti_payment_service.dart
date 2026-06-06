@@ -1,8 +1,6 @@
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/services/api_service.dart';
 
-/// A small helper service that wraps the backend endpoints used for the
-/// Khalti payment integration.
 class KhaltiPaymentService {
   final ApiService _apiService = ApiService();
 
@@ -42,7 +40,6 @@ class KhaltiPaymentService {
     return response['paymentUrl']?.toString();
   }
 
-  /// Verify payment and return detailed status
   Future<Map<String, dynamic>> verifyPaymentWithStatus({required String pidx}) async {
     try {
       final response = await _apiService.post(
@@ -51,12 +48,6 @@ class KhaltiPaymentService {
       );
       
       print("🔍 Verify response: $response");
-      
-
-      // Handle different status responses from backend
-
-      
-      // Payment completed successfully
       if (response['success'] == true && response['status'] == 'completed') {
         return {
           'success': true, 
@@ -64,9 +55,7 @@ class KhaltiPaymentService {
           'message': response['message'] ?? 'Payment verified successfully'
         };
       }
-      
-      // Payment is still pending
-      else if (response['status'] == 'pending') {
+            else if (response['status'] == 'pending') {
         return {
           'success': false, 
           'status': 'pending', 
@@ -74,7 +63,6 @@ class KhaltiPaymentService {
         };
       }
       
-      // Payment failed or was cancelled
       else if (response['status'] == 'failed') {
         return {
           'success': false, 
@@ -83,7 +71,6 @@ class KhaltiPaymentService {
         };
       }
       
-      // Payment record not found
       else if (response['status'] == 'not_found') {
         return {
           'success': false, 
@@ -92,7 +79,6 @@ class KhaltiPaymentService {
         };
       }
       
-      // Error from backend
       else if (response['status'] == 'error') {
         return {
           'success': false, 
@@ -100,9 +86,7 @@ class KhaltiPaymentService {
           'message': response['message'] ?? 'Verification error'
         };
       }
-      
-      // Unknown response
-      else {
+            else {
         return {
           'success': false, 
           'status': 'failed', 
