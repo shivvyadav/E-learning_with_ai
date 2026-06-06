@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/course_model.dart';
 import '../providers/course_provider.dart';
-import 'my_courses_screen.dart'; // ADD THIS IMPORT
+import 'my_courses_screen.dart'; 
 
 class MockPaymentScreen extends StatefulWidget {
   final CourseModel course;
@@ -22,10 +22,6 @@ class _MockPaymentScreenState extends State<MockPaymentScreen> {
       await context.read<CourseProvider>().enrollCourse(widget.course.id);
 
       if (!mounted) return;
-
-
-      // Navigate to My Courses instead of popping to first screen
-
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -34,7 +30,6 @@ class _MockPaymentScreenState extends State<MockPaymentScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                // Navigate to My Courses screen and clear all previous routes
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
